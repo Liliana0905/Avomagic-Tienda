@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avomagic - Crema para Peinar</title>
+    <style>
+        /* Estilos básicos para el proyecto escolar */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #79B879; /* Un verde suave como el aguacate */
+            color: white;
+            padding: 1em 0;
+            text-align: center;
+        }
+        nav {
+            background-color: #5C9A5C;
+            padding: 0.5em 0;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5em 1em;
+            margin: 0 5px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        nav a:hover {
+            background-color: #4A854A;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .product-card {
+            flex: 1;
+            min-width: 300px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        .product-card img {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .product-card h2 {
+            color: #5C9A5C;
+        }
+        .price {
+            font-size: 1.5em;
+            color: #333;
+            margin: 10px 0;
+        }
+        .add-to-cart-btn {
+            background-color: #79B879;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .add-to-cart-btn:hover {
+            background-color: #5C9A5C;
+        }
+        .cart-section {
+            flex: 1;
+            min-width: 300px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            padding-bottom: 5px;
+            border-bottom: 1px dotted #eee;
+        }
+        .cart-total {
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 1.2em;
+            text-align: right;
+        }
+        footer {
+            text-align: center;
+            padding: 1em 0;
+            background-color: #333;
+            color: white;
+            margin-top: 20px;
+        }
+        .logo {
+            max-width: 150px; /* Ajusta el tamaño del logo si es necesario */
+            height: auto;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="LOGO.jpeg" alt="Avomagic Logo" class="LOGO">
+        <h1>Avomagic</h1>
+        <p>Tu cabello merece la magia del aguacate</p>
+    </header>
+
+    <nav>
+        <a href="#productos">Productos</a>
+        <a href="#nosotros">Nosotros</a>
+        <a href="#contacto">Contacto</a>
+    </nav>
+
+    <div class="container">
+        <section id="productos" class="product-card">
+            <h2>Avomagic - Crema para Peinar</h2>
+            <img src="LOGO.jpeg" alt="Avomagic Crema para Peinar"> <p>Descubre el secreto para un cabello suave, brillante y sin frizz con nuestra crema para peinar enriquecida con extracto de aguacate.</p>
+            <div class="price">$69 MXN</div>
+            <button class="add-to-cart-btn" onclick="addToCart({ id: 'avomagic-crema', name: 'Avomagic Crema para Peinar', price: 69 })">Agregar al Carrito</button>
+        </section>
+
+        <aside class="cart-section">
+            <h2>Tu Carrito</h2>
+            <div id="cart-items">
+                <p>El carrito está vacío.</p>
+            </div>
+            <div class="cart-total">
+                Total: $<span id="cart-total-price">0.00</span> MXN
+            </div>
+            <button class="add-to-cart-btn" style="width: 100%; margin-top: 15px;">Finalizar Compra</button>
+        </aside>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Avomagic. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        let cart = [];
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartTotalPriceSpan = document.getElementById('cart-total-price');
+
+        function updateCartDisplay() {
+            cartItemsContainer.innerHTML = ''; // Limpiar el contenido actual del carrito
+            let total = 0;
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p>El carrito está vacío.</p>';
+                cartTotalPriceSpan.textContent = '0.00';
+                return;
+            }
+
+            cart.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('cart-item');
+                itemDiv.innerHTML = `
+                    <span>${item.name} (${item.quantity}x)</span>
+                    <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                `;
+                cartItemsContainer.appendChild(itemDiv);
+                total += item.price * item.quantity;
+            });
+
+            cartTotalPriceSpan.textContent = total.toFixed(2);
+        }
+
+        function addToCart(product) {
+            const existingItemIndex = cart.findIndex(item => item.id === product.id);
+
+            if (existingItemIndex > -1) {
+                // Si el producto ya está en el carrito, incrementa la cantidad
+                cart[existingItemIndex].quantity += 1;
+            } else {
+                // Si no, agrégalo como un nuevo ítem
+                cart.push({ ...product, quantity: 1 });
+            }
+            updateCartDisplay();
+            alert(`${product.name} ha sido agregado al carrito.`);
+        }
+
+        // Inicializar el display del carrito al cargar la página
+        document.addEventListener('DOMContentLoaded', updateCartDisplay);
+    </script>
+</body>
+</html>
